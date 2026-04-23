@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
 <style>
   :root {
     --navy: #1a2556;
@@ -175,6 +178,7 @@
     padding: 36px 40px;
     box-shadow: var(--shadow-soft);
     border: 1px solid var(--border-soft);
+    min-width: 0;
   }
 
   .task-card h2 {
@@ -201,6 +205,11 @@
     padding: 28px;
     box-shadow: var(--shadow-soft);
     border: 1px solid var(--border-soft);
+    min-width: 0;
+  }
+
+  .section {
+    min-width: 0;
   }
 
   .steps-grid {
@@ -283,7 +292,7 @@
 
   .panels {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 20px;
   }
 
@@ -293,6 +302,7 @@
     padding: 32px 36px;
     box-shadow: var(--shadow-soft);
     border: 1px solid var(--border-soft);
+    min-width: 0;
   }
 
   .panel h3 {
@@ -329,33 +339,74 @@
     padding: 18px 22px;
     margin: 14px 0;
     border: 1px solid var(--border-soft);
-    font-family: 'JetBrains Mono', monospace;
     font-size: 14px;
-    color: var(--navy);
+    color: var(--ink-soft);
     overflow-x: auto;
   }
 
-  .formula .big {
-    font-size: 18px;
-    font-weight: 600;
-    display: block;
-    margin: 6px 0;
+  .katex-block {
+    display: flex;
+    justify-content: center;
+    margin: 18px 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    color: var(--navy);
+  }
+
+  .katex-block .katex {
+    font-size: clamp(18px, 2.1vw, 22px);
+  }
+
+  .formula-caption {
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 14px 2px 0;
+  }
+
+  .metric-notes {
+    list-style: none;
+    margin: 18px 0 4px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .metric-notes li {
+    position: relative;
+    padding-left: 22px;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .metric-notes li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--navy-soft);
   }
 
   .code-block {
     background: var(--navy-deep);
     border-radius: 16px;
-    padding: 24px 26px;
+    padding: 44px 26px 22px;
     margin: 18px 0 8px;
-    overflow-x: auto;
     position: relative;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .code-block::before {
     content: 'python';
     position: absolute;
-    top: 12px;
-    right: 18px;
+    top: 14px;
+    left: 22px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: rgba(255, 255, 255, 0.35);
@@ -370,6 +421,93 @@
     line-height: 1.65;
     color: #d9e0ff;
     white-space: pre;
+    margin: 0;
+  }
+
+  .code-scroll {
+    max-height: 280px;
+    overflow: auto;
+    transition: max-height 0.35s ease;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+
+  .code-scroll::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .code-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    border: 2px solid var(--navy-deep);
+  }
+
+  .code-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.28);
+  }
+
+  .code-block.expanded .code-scroll {
+    max-height: none;
+  }
+
+  .code-block:not(.expanded) .code-scroll.is-overflow {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent);
+            mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent);
+  }
+
+  .code-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 6px;
+    z-index: 2;
+  }
+
+  .code-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.72);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1;
+  }
+
+  .code-btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.95);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+
+  .code-btn:focus-visible {
+    outline: 2px solid var(--accent-mint);
+    outline-offset: 2px;
+  }
+
+  .code-btn svg {
+    width: 12px;
+    height: 12px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .code-btn.copied {
+    background: rgba(159, 235, 206, 0.2);
+    color: var(--accent-mint);
+    border-color: rgba(159, 235, 206, 0.4);
   }
 
   .code-block .kw { color: #ff79c6; }
@@ -517,6 +655,49 @@
     position: relative;
   }
 
+  .download-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin: 18px 0 6px;
+    padding: 14px 22px;
+    background: linear-gradient(135deg, var(--accent-mint-soft) 0%, var(--accent-mint) 100%);
+    color: #0f4a32;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    border-radius: 14px;
+    border: 1px solid rgba(70, 180, 130, 0.25);
+    box-shadow: 0 1px 3px rgba(26, 37, 86, 0.04), 0 8px 20px rgba(70, 180, 130, 0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .download-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(26, 37, 86, 0.06), 0 12px 28px rgba(70, 180, 130, 0.28);
+  }
+
+  .download-cta svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  .download-cta .download-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1d6e4e;
+    letter-spacing: 0.02em;
+    opacity: 0.85;
+  }
+
   .arch-caption {
     text-align: center;
     font-size: 14px;
@@ -543,8 +724,10 @@
 
     .submission {
       flex-direction: column;
-      text-align: center;
+      text-align: left;
       align-items: flex-start;
+      padding: 28px 24px;
+      gap: 20px;
     }
 
     h1 {
@@ -554,6 +737,133 @@
     .task-card,
     .panel {
       padding: 24px 22px;
+    }
+
+    .task-card h2 {
+      font-size: 22px;
+    }
+
+    .panel h3 {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .page {
+      padding: 36px 16px 64px;
+    }
+
+    .hero {
+      margin-bottom: 44px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      padding: 7px 14px;
+    }
+
+    .lede {
+      font-size: 16px;
+    }
+
+    .stat-card {
+      padding: 18px 20px;
+      gap: 14px;
+    }
+
+    .stat-number {
+      font-size: 26px;
+    }
+
+    .task-card,
+    .panel {
+      padding: 20px 16px;
+      border-radius: 18px;
+    }
+
+    .task-card h2 {
+      font-size: 20px;
+    }
+
+    .task-card p,
+    .panel p {
+      font-size: 14.5px;
+    }
+
+    .steps-wrap {
+      padding: 18px 14px;
+      border-radius: 18px;
+    }
+
+    .step {
+      padding: 18px 18px;
+    }
+
+    .data-preview,
+    .formula {
+      padding: 14px 16px;
+      font-size: 12.5px;
+    }
+
+    .code-block {
+      padding: 44px 14px 18px;
+      border-radius: 14px;
+      margin-left: -4px;
+      margin-right: -4px;
+    }
+
+    .code-block pre {
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .code-actions {
+      top: 8px;
+      right: 8px;
+    }
+
+    .code-btn {
+      font-size: 10px;
+      padding: 5px 8px;
+    }
+
+    .code-btn span {
+      display: none;
+    }
+
+    .code-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .katex-block .katex {
+      font-size: 15px;
+    }
+
+    .submission {
+      margin-top: 36px;
+      padding: 26px 20px;
+      border-radius: 20px;
+    }
+
+    .submission h3 {
+      font-size: 22px;
+    }
+
+    .submission p {
+      font-size: 14px;
+    }
+
+    .submission .good-luck {
+      font-size: 24px;
+    }
+
+    .req-chip {
+      padding: 16px 18px;
+    }
+
+    .value-item {
+      font-size: 14px;
     }
   }
 
@@ -581,29 +891,13 @@
   <header class="hero">
     <div class="eyebrow">
       <span class="dot"></span>
-      <span>Курс ML &amp; RecSys · Отборочное задание</span>
+      <span>Курс RecSys &amp; AI · Отборочное задание</span>
     </div>
     <h1>Предсказание<br>следующего товара</h1>
     <p class="lede">
-      Постройте простую рекомендательную систему, которая предсказывает следующий товар, с которым взаимодействует пользователь, на основе истории его просмотров. Знаний машинного обучения не требуется — мы проверяем навыки Python, понимание теории вероятностей и умение рассуждать о данных и результатах.
+      Цель — построить простую рекомендательную систему, которая предсказывает следующий товар, с которым взаимодействует пользователь, на основе истории его просмотров. Предварительных знаний по машинному обучению не требуется — мы проверяем навыки Python, понимание теории вероятностей и умение рассуждать о данных и результатах.
     </p>
   </header>
-
-  <!-- STATS -->
-  <section class="stats">
-    <div class="stat-card">
-      <div class="stat-number">1 выходные</div>
-      <div class="stat-label">на выполнение<br>задания</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number">6 шагов</div>
-      <div class="stat-label">от сырых данных<br>до оценки модели</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number">Hit@10</div>
-      <div class="stat-label">единственная<br>метрика</div>
-    </div>
-  </section>
 
   <!-- DATA -->
   <section class="section">
@@ -611,11 +905,16 @@
     <div class="task-card">
       <h2>Данные</h2>
       <p>
-        Вам предоставляется синтетический датасет e-commerce с пользовательскими сессиями просмотра товаров. Каждая сессия — это последовательность ID товаров, которые пользователь просмотрел по порядку. <strong>Каждая сессия содержит не менее 3 товаров.</strong>
+        Вам предоставляется синтетический датасет e-commerce с пользовательскими сессиями просмотра товаров. Каждая сессия — это последовательность ID товаров, которые один пользователь просмотрел по порядку. <strong>Каждая сессия содержит не менее 3 товаров.</strong>
       </p>
       <p>
         Данные хранятся в формате JSON Lines (<code>sessions.jsonl</code>): каждая строка — это JSON-массив, представляющий одну сессию. Элементы массива — целочисленные ID товаров:
       </p>
+      <a class="download-cta" href="data/sessions.jsonl" download="sessions.jsonl">
+        <svg viewBox="0 0 24 24"><path d="M12 3v12"/><polyline points="6 11 12 17 18 11"/><path d="M4 21h16"/></svg>
+        <span>Скачать датасет</span>
+        <span class="download-meta">sessions.jsonl · 126 KB</span>
+      </a>
       <div class="data-preview">
 <span class="bracket">[</span><span class="num">17, 42, 8, 103, 42</span><span class="bracket">]</span><br>
 <span class="bracket">[</span><span class="num">5, 99, 203, 17</span><span class="bracket">]</span><br>
@@ -651,27 +950,27 @@ sessions = []
         <div class="step">
           <span class="step-number">ШАГ 01</span>
           <div class="step-title">Анализ данных</div>
-          <div class="step-text">Число сессий, число уникальных товаров, распределение длин сессий, частоты товаров. Сделайте несколько графиков. Отметьте всё, что покажется вам необычным.</div>
+          <div class="step-text">Число сессий, число уникальных товаров, распределение длин сессий, частоты товаров и другие сводные показатели, которые покажутся полезными. Сделайте несколько графиков. Отметьте всё, что покажется необычным или заслуживающим внимания.</div>
         </div>
         <div class="step lavender">
           <span class="step-number">ШАГ 02</span>
           <div class="step-title">Train/test split</div>
-          <div class="step-text">В каждой сессии последний товар → test target, всё до него → обучающая история. Будьте готовы объяснить, почему случайное разбиение здесь не подходит.</div>
+          <div class="step-text">Разбейте данные по схеме из раздела «Разбиение train / test»: в каждой сессии последний товар — тестовая цель, всё до него — обучающая история. Будьте готовы объяснить, почему случайное разбиение для таких данных не подходит.</div>
         </div>
         <div class="step">
           <span class="step-number">ШАГ 03</span>
           <div class="step-title">Граф переходов</div>
-          <div class="step-text">Постройте граф, где рёбра между соседними товарами несут вероятность P(j | i). Продумайте, как обрабатывать редкие или не встретившиеся в обучении переходы.</div>
+          <div class="step-text">На обучающих данных постройте граф, где вершины — товары, а рёбра — переходы между соседними товарами в сессии. Посчитайте P(j | i) — вероятность того, что сразу после i будет просмотрен j. Продумайте обработку редких или не встретившихся переходов.</div>
         </div>
         <div class="step lavender">
           <span class="step-number">ШАГ 04</span>
           <div class="step-title">Рекомендательная модель</div>
-          <div class="step-text">По последнему товару возвращайте топ-10 кандидатов по вероятности перехода. Корректно обработайте случай, когда последний товар не встречался в обучении.</div>
+          <div class="step-text">По последнему товару в сессии возвращайте топ-10 кандидатов, отранжированных по вероятности перехода. Корректно обработайте случай, когда последний товар ни разу не встречался при обучении.</div>
         </div>
         <div class="step featured">
           <span class="step-number">ШАГ 05</span>
           <div class="step-title">Оценка качества</div>
-          <div class="step-text">Метрика Hit@10 на тесте. Сравните с бейзлайном «10 самых популярных товаров». Если не удалось его обойти — выясните, почему.</div>
+          <div class="step-text">Оцените модель на тесте по метрике Hit@10. Сравните с бейзлайном «10 самых популярных товаров». Если ваша модель не обходит бейзлайн — выясните, почему.</div>
         </div>
         <div class="step">
           <span class="step-number">ШАГ 06</span>
@@ -702,15 +1001,37 @@ sessions = []
           Обучающие сессии и тестовые цели выровнены по индексу: <code>test_targets[i]</code> — товар, который нужно предсказать по <code>train_sessions[i]</code>.
         </p>
         <div class="code-block">
-<pre><span class="kw">def</span> <span class="fn">train_test_split</span>(sessions):
+<pre><span class="kw">def</span> <span class="fn">train_test_split</span>(
+    sessions: <span class="builtin">list</span>[<span class="builtin">list</span>[<span class="builtin">int</span>]],
+) -> <span class="builtin">tuple</span>[<span class="builtin">list</span>[<span class="builtin">list</span>[<span class="builtin">int</span>]], <span class="builtin">list</span>[<span class="builtin">int</span>]]:
     <span class="str">"""
+    Разбиение сессий на train и test.
+
     Для каждой сессии:
       - все товары кроме последнего становятся
         обучающей сессией
       - последний товар становится тестовой целью
+
+    Возвращаемые списки выровнены по индексу:
+    test_targets[i] — товар, который нужно
+    предсказать по train_sessions[i] как истории.
+
+    Parameters
+    ----------
+    sessions : list of lists of ints
+        Каждый вложенный список — одна сессия ID
+        товаров, упорядоченная по времени.
+        Все сессии содержат не менее 3 товаров.
+
+    Returns
+    -------
+    train_sessions : list of lists of ints
+        Сессии для обучения (исходные без последнего товара).
+    test_targets : list of ints
+        Следующий товар для предсказания по каждой сессии.
     """</span>
-    train_sessions = [s[:-<span class="num">1</span>] <span class="kw">for</span> s <span class="kw">in</span> sessions]
-    test_targets  = [s[-<span class="num">1</span>]  <span class="kw">for</span> s <span class="kw">in</span> sessions]
+    train_sessions = [session[:-<span class="num">1</span>] <span class="kw">for</span> session <span class="kw">in</span> sessions]
+    test_targets = [session[-<span class="num">1</span>] <span class="kw">for</span> session <span class="kw">in</span> sessions]
     <span class="kw">return</span> train_sessions, test_targets</pre>
         </div>
       </div>
@@ -722,17 +1043,53 @@ sessions = []
           Для каждого тестового примера проверяем, есть ли истинный следующий товар в списке из 10 рекомендаций. Усредняем результат по всем тестовым примерам.
         </p>
         <div class="formula">
-          <span class="big">Hit@10 = (1 / N) · Σᵢ 𝟙[ trueᵢ ∈ recsᵢ ]</span>
-          Значение от 0 до 1 — чем больше, тем лучше. Позиция истинного товара внутри топ-10 не важна.
+          <div class="katex-block">
+            $$\mathrm{hit}_i = \begin{cases} 1 & \text{если } \mathit{true\_item} \in \mathit{recommendations} \\ 0 & \text{иначе} \end{cases}$$
+          </div>
+          <p class="formula-caption">Hit@10 по всему тестовому набору — это среднее этих попаданий:</p>
+          <div class="katex-block">
+            $$\mathrm{Hit@10} = \frac{1}{N} \sum_{i=1}^{N} \mathrm{hit}_i$$
+          </div>
+          <p class="formula-caption">Значение от 0 до 1 — чем больше, тем лучше. Например, Hit@10 = 0.15 означает, что модель корректно помещает истинный следующий товар в топ-10 в 15% случаев.</p>
         </div>
+        <ul class="metric-notes">
+          <li>Позиция истинного товара внутри топ-10 не важна — важно только, попал он туда или нет.</li>
+          <li>Возвращайте ровно 10 товаров на каждое предсказание. Если модель возвращает меньше, это допустимо, но пустые места не могут стать попаданиями.</li>
+          <li>Не включайте сам текущий товар в рекомендации, если на это нет особой причины.</li>
+        </ul>
         <div class="code-block">
-<pre><span class="kw">def</span> <span class="fn">hit_at_k</span>(recommendations, true_items, k=<span class="num">10</span>):
-    <span class="kw">assert</span> <span class="builtin">len</span>(recommendations) == <span class="builtin">len</span>(true_items)
+<pre><span class="kw">def</span> <span class="fn">hit_at_k</span>(
+    recommendations: <span class="builtin">list</span>[<span class="builtin">list</span>[<span class="builtin">int</span>]],
+    true_items: <span class="builtin">list</span>[<span class="builtin">int</span>],
+    k: <span class="builtin">int</span> = <span class="num">10</span>,
+) -> <span class="builtin">float</span>:
+    <span class="str">"""
+    Вычисление Hit@K для списка предсказаний.
+
+    Parameters
+    ----------
+    recommendations : list of lists of ints
+        recommendations[i] — ранжированный список
+        рекомендаций для i-го примера.
+    true_items : list of ints
+        true_items[i] — истинный следующий товар
+        для i-го примера.
+    k : int
+        Отсечка top-K (по умолчанию 10).
+
+    Returns
+    -------
+    float
+        Hit@K, значение от 0 до 1.
+    """</span>
+    <span class="kw">assert</span> <span class="builtin">len</span>(recommendations) == <span class="builtin">len</span>(true_items), \
+        <span class="str">"recommendations и true_items должны совпадать по длине"</span>
+
     hits = <span class="num">0</span>
-    <span class="kw">for</span> recs, true_item <span class="kw">in</span> <span class="builtin">zip</span>(
-            recommendations, true_items):
+    <span class="kw">for</span> recs, true_item <span class="kw">in</span> <span class="builtin">zip</span>(recommendations, true_items):
         <span class="kw">if</span> true_item <span class="kw">in</span> recs[:k]:
             hits += <span class="num">1</span>
+
     <span class="kw">return</span> hits / <span class="builtin">len</span>(true_items)</pre>
         </div>
       </div>
@@ -763,7 +1120,7 @@ sessions = []
         </div>
         <div class="value-item">
           <span class="tick"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></span>
-          <span>Любопытство — умение заметить странность в данных и разобраться в ней</span>
+          <span>Любопытство — умение заметить странность в данных или результатах и разобраться в ней</span>
         </div>
       </div>
     </div>
@@ -779,11 +1136,11 @@ sessions = []
       </div>
       <div class="req-chip">
         <span class="label">Разрешено</span>
-        <span class="value">stdlib, NumPy, matplotlib</span>
+        <span class="value">stdlib (collections, json), matplotlib; NumPy — по желанию</span>
       </div>
       <div class="req-chip">
         <span class="label">Запрещено</span>
-        <span class="value">implicit, LightFM, RecBole и подобные</span>
+        <span class="value">готовые библиотеки RecSys: implicit, LightFM, RecBole и подобные</span>
       </div>
     </div>
   </section>
@@ -793,13 +1150,134 @@ sessions = []
     <div>
       <h3>Отправка решения</h3>
       <p>
-        Отправьте ноутбук или скрипт до <strong>[дедлайн]</strong> через <strong>[канал отправки]</strong>. Если что-то непонятно — спрашивайте. Как вы задаёте вопросы — тоже важный сигнал для нас.
+        Отправьте ноутбук или скрипт до <strong>27.04.26</strong> через канал отправки, предоставленный <strong>ВШЭ</strong>. Если что-то непонятно — спрашивайте. Как вы задаёте вопросы — тоже часть сигнала для нас.
       </p>
     </div>
     <div class="good-luck">Удачи →</div>
   </footer>
 
 </div>
+
+<script>
+  (function () {
+    const COPY_ICON = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    const CHECK_ICON = '<svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>';
+    const EXPAND_ICON = '<svg viewBox="0 0 24 24"><polyline points="4 9 12 17 20 9"/></svg>';
+    const COLLAPSE_ICON = '<svg viewBox="0 0 24 24"><polyline points="4 15 12 7 20 15"/></svg>';
+
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      return new Promise((resolve, reject) => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          resolve();
+        } catch (e) {
+          reject(e);
+        } finally {
+          ta.remove();
+        }
+      });
+    }
+
+    document.querySelectorAll('.download-cta').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = link.getAttribute('href');
+        const filename = link.getAttribute('download') || url.split('/').pop();
+        fetch(url)
+          .then((r) => {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.blob();
+          })
+          .then((blob) => {
+            const objectUrl = URL.createObjectURL(
+              new Blob([blob], { type: 'application/octet-stream' })
+            );
+            const a = document.createElement('a');
+            a.href = objectUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+          })
+          .catch(() => {
+            window.location.href = url;
+          });
+      });
+    });
+
+    document.querySelectorAll('.code-block').forEach((block) => {
+      const pre = block.querySelector('pre');
+      if (!pre) return;
+
+      const scroll = document.createElement('div');
+      scroll.className = 'code-scroll';
+      pre.parentNode.insertBefore(scroll, pre);
+      scroll.appendChild(pre);
+
+      const actions = document.createElement('div');
+      actions.className = 'code-actions';
+
+      const copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'code-btn';
+      copyBtn.setAttribute('aria-label', 'Скопировать код');
+      copyBtn.innerHTML = COPY_ICON + '<span>Копировать</span>';
+      copyBtn.addEventListener('click', () => {
+        copyText(pre.textContent).then(() => {
+          copyBtn.classList.add('copied');
+          copyBtn.innerHTML = CHECK_ICON + '<span>Скопировано</span>';
+          clearTimeout(copyBtn._t);
+          copyBtn._t = setTimeout(() => {
+            copyBtn.classList.remove('copied');
+            copyBtn.innerHTML = COPY_ICON + '<span>Копировать</span>';
+          }, 1600);
+        }).catch(() => {
+          copyBtn.innerHTML = COPY_ICON + '<span>Ошибка</span>';
+        });
+      });
+      actions.appendChild(copyBtn);
+
+      const expandBtn = document.createElement('button');
+      expandBtn.type = 'button';
+      expandBtn.className = 'code-btn code-expand';
+      expandBtn.setAttribute('aria-expanded', 'false');
+      expandBtn.innerHTML = EXPAND_ICON + '<span>Развернуть</span>';
+      expandBtn.setAttribute('aria-label', 'Развернуть код');
+      expandBtn.addEventListener('click', () => {
+        const expanded = block.classList.toggle('expanded');
+        expandBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        expandBtn.setAttribute('aria-label', expanded ? 'Свернуть код' : 'Развернуть код');
+        expandBtn.innerHTML = (expanded ? COLLAPSE_ICON : EXPAND_ICON)
+          + '<span>' + (expanded ? 'Свернуть' : 'Развернуть') + '</span>';
+        if (!expanded) {
+          scroll.scrollTop = 0;
+        }
+      });
+      actions.appendChild(expandBtn);
+
+      block.appendChild(actions);
+
+      const updateOverflow = () => {
+        const overflowing = pre.scrollHeight > scroll.clientHeight + 2;
+        scroll.classList.toggle('is-overflow', overflowing && !block.classList.contains('expanded'));
+        expandBtn.style.display = overflowing || block.classList.contains('expanded') ? '' : 'none';
+      };
+
+      requestAnimationFrame(updateOverflow);
+      window.addEventListener('resize', updateOverflow);
+    });
+  })();
+</script>
 
 </body>
 </html>
