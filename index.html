@@ -88,6 +88,118 @@
     margin-bottom: 64px;
   }
 
+  .deadline-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 18px 26px;
+    margin-bottom: 36px;
+    background: linear-gradient(135deg, #1a2556 0%, #2d3a7a 60%, #4a5aa8 100%);
+    border-radius: 18px;
+    color: white;
+    box-shadow: 0 1px 3px rgba(26, 37, 86, 0.08), 0 12px 32px rgba(26, 37, 86, 0.22);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .deadline-banner::after {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -10%;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(159, 235, 206, 0.28), transparent 60%);
+    filter: blur(36px);
+    pointer-events: none;
+  }
+
+  .deadline-banner .deadline-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    min-width: 0;
+  }
+
+  .deadline-banner .pulse {
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-mint);
+    box-shadow: 0 0 0 4px rgba(159, 235, 206, 0.25);
+    animation: deadlinePulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes deadlinePulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(159, 235, 206, 0.25); }
+    50% { box-shadow: 0 0 0 10px rgba(159, 235, 206, 0.05); }
+  }
+
+  .deadline-banner .deadline-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent-mint);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .deadline-banner .deadline-text {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.88);
+    line-height: 1.4;
+  }
+
+  .deadline-banner .deadline-time {
+    font-weight: 800;
+    font-size: 18px;
+    color: white;
+    letter-spacing: -0.01em;
+    background: linear-gradient(135deg, #9febce 0%, #c5f3de 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    white-space: nowrap;
+    margin-left: 6px;
+  }
+
+  .deadline-banner .deadline-countdown {
+    flex-shrink: 0;
+    position: relative;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(159, 235, 206, 0.25);
+    border-radius: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-mint);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 600px) {
+    .deadline-banner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 16px 18px;
+      gap: 14px;
+    }
+
+    .deadline-banner .deadline-time {
+      font-size: 16px;
+    }
+
+    .deadline-banner .deadline-text {
+      font-size: 13.5px;
+    }
+  }
+
   .eyebrow {
     display: inline-flex;
     align-items: center;
@@ -698,6 +810,84 @@
     opacity: 0.85;
   }
 
+  .register-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    padding: 14px 22px;
+    background: var(--navy);
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 1px 3px rgba(26, 37, 86, 0.08), 0 8px 24px rgba(26, 37, 86, 0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .register-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(26, 37, 86, 0.12), 0 14px 32px rgba(26, 37, 86, 0.26);
+  }
+
+  .register-cta svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  .register-cta .register-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-mint);
+    letter-spacing: 0.02em;
+    opacity: 0.9;
+  }
+
+  .submission-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 14px 22px;
+    background: linear-gradient(135deg, var(--accent-mint-soft) 0%, var(--accent-mint) 100%);
+    color: #0f4a32;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    border-radius: 14px;
+    border: 1px solid rgba(70, 180, 130, 0.25);
+    box-shadow: 0 1px 3px rgba(26, 37, 86, 0.04), 0 8px 20px rgba(70, 180, 130, 0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+
+  .submission-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(26, 37, 86, 0.06), 0 12px 28px rgba(70, 180, 130, 0.32);
+  }
+
+  .submission-cta svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
   .arch-caption {
     text-align: center;
     font-size: 14px;
@@ -887,6 +1077,20 @@
 
 <div class="page">
 
+  <!-- DEADLINE -->
+  <div class="deadline-banner" role="note" aria-label="Дедлайн отправки решения">
+    <div class="deadline-left">
+      <span class="pulse" aria-hidden="true"></span>
+      <div>
+        <span class="deadline-label">Дедлайн · Submission deadline</span>
+        <div class="deadline-text">
+          Приём решений до&nbsp;&nbsp;<span class="deadline-time">27.04.26, 12:00 MSK</span>
+        </div>
+      </div>
+    </div>
+    <div class="deadline-countdown" id="deadline-countdown" aria-live="polite"></div>
+  </div>
+
   <!-- HERO -->
   <header class="hero">
     <div class="eyebrow">
@@ -897,6 +1101,11 @@
     <p class="lede">
       Цель — построить простую рекомендательную систему, которая предсказывает следующий товар, с которым взаимодействует пользователь, на основе истории его просмотров. Предварительных знаний по машинному обучению не требуется — мы проверяем навыки Python, понимание теории вероятностей и умение рассуждать о данных и результатах.
     </p>
+    <a class="register-cta" href="https://forms.gle/xGwi3RSQBdxJ9ii37" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span>Зарегистрироваться</span>
+      <span class="register-meta">форма участника</span>
+    </a>
   </header>
 
   <!-- DATA -->
@@ -1150,16 +1359,51 @@ sessions = []
     <div>
       <h3>Отправка решения</h3>
       <p>
-        Отправьте ноутбук или скрипт до <strong>27.04.26</strong> через канал отправки, предоставленный <strong>ВШЭ</strong>. Если что-то непонятно — спрашивайте. Как вы задаёте вопросы — тоже часть сигнала для нас.
+        Отправьте ноутбук или скрипт до <strong>27.04.26, 12:00 MSK</strong> через канал отправки, предоставленный <strong>ВШЭ</strong>. Если что-то непонятно — спрашивайте. Как вы задаёте вопросы — тоже часть сигнала для нас.
       </p>
+      <a class="submission-cta" href="https://forms.gle/xGwi3RSQBdxJ9ii37" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Зарегистрироваться</span>
+      </a>
     </div>
-    <div class="good-luck">Удачи →</div>
   </footer>
 
 </div>
 
 <script>
   (function () {
+    // Deadline: 27.04.2026 12:00 MSK (UTC+3) => 09:00 UTC
+    const DEADLINE = new Date(Date.UTC(2026, 3, 27, 9, 0, 0));
+    const el = document.getElementById('deadline-countdown');
+    if (el) {
+      const plural = (n, forms) => {
+        const mod10 = n % 10, mod100 = n % 100;
+        if (mod10 === 1 && mod100 !== 11) return forms[0];
+        if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return forms[1];
+        return forms[2];
+      };
+      const update = () => {
+        const diff = DEADLINE.getTime() - Date.now();
+        if (diff <= 0) {
+          el.textContent = 'Приём решений завершён';
+          return;
+        }
+        const totalMinutes = Math.floor(diff / 60000);
+        const days = Math.floor(totalMinutes / (60 * 24));
+        const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+        const minutes = totalMinutes % 60;
+        if (days > 0) {
+          el.textContent = `осталось ${days} ${plural(days, ['день', 'дня', 'дней'])} ${hours} ч`;
+        } else if (hours > 0) {
+          el.textContent = `осталось ${hours} ч ${minutes} мин`;
+        } else {
+          el.textContent = `осталось ${minutes} ${plural(minutes, ['минута', 'минуты', 'минут'])}`;
+        }
+      };
+      update();
+      setInterval(update, 60000);
+    }
+
     const COPY_ICON = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
     const CHECK_ICON = '<svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>';
     const EXPAND_ICON = '<svg viewBox="0 0 24 24"><polyline points="4 9 12 17 20 9"/></svg>';
